@@ -29,6 +29,6 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version-file: go.mod
-      - uses: momentohq/mo-eval-action@cacc23563440fe665007711a61a25a152deeb7ee # v1.3.1
+      - uses: momentohq/mo-eval-action@8fe190092d70ccca269b3d856e977b1258efce38 # v1.3.2
         with:
           arms: ${{ inputs.arms }}
