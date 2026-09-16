@@ -1,0 +1,34 @@
+name: mo-eval suite
+on:
+  workflow_dispatch:
+    inputs:
+      arms:
+        description: Models to evaluate, space-separated ("none" = build the suite only)
+        default: "anthropic/claude-opus-5 momento/zai-org/GLM-5.3"
+permissions:
+  contents: read
+  pull-requests: read
+  id-token: write   # the job authenticates to mo-eval as this repository; no secret to manage
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned by commit, not by tag. This job holds `id-token: write`, so whatever runs in it can
+      # mint this repository's identity, and a moved major tag changes that code with no diff here.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          # The token goes away with the step that used it. `checkout` otherwise leaves it in
+          # `.git/config` as an auth header, and this job runs the repository's OWN historical
+          # tests — code from before anyone reviewed it for this purpose, as the same user, in the
+          # same workspace. The runner takes `GH_TOKEN` out of the environment it hands those
+          # tests, which does nothing about a credential written to disk. Nothing after checkout
+          # needs it: the runner queries the forge with `gh` using its own environment, and every
+          # git command it runs against this checkout is local.
+          persist-credentials: false
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: go.mod
+      - uses: momentohq/mo-eval-action@cacc23563440fe665007711a61a25a152deeb7ee # v1.3.1
+        with:
+          arms: ${{ inputs.arms }}
