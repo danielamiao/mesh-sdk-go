@@ -5,6 +5,12 @@ on:
       arms:
         description: Models to evaluate, space-separated ("none" = build the suite only)
         default: "anthropic/claude-opus-5 momento/zai-org/GLM-5.3"
+      harnesses:
+        description: Coding-agent harnesses, space-separated (mo, cc, pi, strands, codex)
+        default: "mo"
+      candidates:
+        description: Candidates the service is asked to source (tasks in the suite)
+        default: "12"
 permissions:
   contents: read
   pull-requests: read
@@ -29,6 +35,9 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version-file: go.mod
-      - uses: momentohq/mo-eval-action@8fe190092d70ccca269b3d856e977b1258efce38 # v1.3.2
+      - uses: momentohq/mo-eval-action@d21b901efe7a5b6a02b0c3c84987b181a06a428c # v1.6.1
         with:
+          service: https://zxui7nt7fztoox227b3piwf5jm0lumyg.lambda-url.us-west-2.on.aws
           arms: ${{ inputs.arms }}
+          harnesses: ${{ inputs.harnesses }}
+          candidates: ${{ inputs.candidates }}
