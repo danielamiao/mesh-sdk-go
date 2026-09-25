@@ -11,6 +11,15 @@ on:
       candidates:
         description: Candidates the service is asked to source (tasks in the suite)
         default: "12"
+      mo-version:
+        description: Published mo release to run every arm on (X.Y.Z); empty uses the service's pin
+        default: ""
+      claude-code-version:
+        description: Claude Code release for cc arms (X.Y.Z); empty uses the pin
+        default: ""
+      codex-version:
+        description: Codex CLI release for codex arms (X.Y.Z); empty uses the pin
+        default: ""
 permissions:
   contents: read
   pull-requests: read
@@ -35,9 +44,12 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version-file: go.mod
-      - uses: momentohq/mo-eval-action@d21b901efe7a5b6a02b0c3c84987b181a06a428c # v1.6.1
+      - uses: momentohq/mo-eval-action@f0db576dd5216941662311a02421a60d432a89cc # v1.7.0
         with:
           service: https://zxui7nt7fztoox227b3piwf5jm0lumyg.lambda-url.us-west-2.on.aws
           arms: ${{ inputs.arms }}
           harnesses: ${{ inputs.harnesses }}
           candidates: ${{ inputs.candidates }}
+          mo-version: ${{ inputs.mo-version }}
+          claude-code-version: ${{ inputs.claude-code-version }}
+          codex-version: ${{ inputs.codex-version }}
